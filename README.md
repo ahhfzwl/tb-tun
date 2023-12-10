@@ -17,32 +17,20 @@ mv tb_userspace /usr/bin/
 
 （简单解释下，安装依赖库，从github上获取源代码，编译，并将编译生成的tb_userspace移动到/etc目录下
 
-创建自启动脚本
+下载自启动脚本
+
+wget -O /etc/init.d/ipv6tb https://raw.githubusercontent.com/ahhfzwl/tb-tun/master/ipv6tb
+
+替换脚本中的3个IP地址
 
 nano /etc/init.d/ipv6tb
 
-#!/bin/sh
-case "$1" in
-  start)
-    echo "Starting ipv6tb"
-      setsid /usr/bin/tb_userspace tb 74.82.46.6 10.38.185.90 sit > /dev/null 2>&1 &
-      sleep 1s
-      ifconfig tb up
-      ifconfig tb inet6 add 2001:470:23:607::2/64
-      ifconfig tb mtu 1480
-      route -A inet6 add ::/0 dev tb
-      route -A inet6 del ::/0 dev venet0
-    ;;
-  stop)
-    echo "Stopping ipv6tb"
-      ifconfig tb down
-      route -A inet6 del ::/0 dev tb
-      killall tb_userspace
-    ;;
-  *)
-    echo "Usage: /etc/init.d/ipv6tb {start|stop}"
-    exit 1
-    ;;
-esac
-exit 0
+为该sh脚本添加可执行权限，以及自启动。
 
+chmod 755 /etc/init.d/ipv6tb
+
+update-rc.d ipv6tb defaults
+
+手动启动
+
+/etc/init.d/ipv6tb start
