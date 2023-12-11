@@ -1,4 +1,4 @@
-通过命令cat /dev/net/tun返回File descriptor in bad state则说明tun/tap设备已经打开，否则滚蛋。
+如果命令cat /dev/net/tun返回File descriptor in bad state那么继续，否则滚蛋。
 
 apt update && apt -y install net-tools iproute2 gcc git
 
